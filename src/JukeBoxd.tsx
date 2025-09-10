@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Music, Star, User, Eye, Plus } from 'lucide-react';
-import { Song, TabType, mockSongs } from './mockData/mockSongs';
+import { Star, User } from 'lucide-react';
+import type {TabType } from './mockData/mockSongs'
+import { mockSongs } from './mockData/mockSongs'
 import Navbar from './component/Navbar'
 import NavButton from './component/NavButton'
 import ProfileStats from './component/ProfileStats'

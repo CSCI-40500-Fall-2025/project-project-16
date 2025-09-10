@@ -1,6 +1,6 @@
 import React from 'react'
 import { Music, Star, User, Eye } from 'lucide-react'
-import { TabType } from '../mockData/mockSongs'
+import type { TabType } from '../mockData/mockSongs'
 
 type NavbarProps = {
   activeTab: TabType

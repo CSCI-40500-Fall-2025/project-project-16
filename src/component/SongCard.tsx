@@ -1,6 +1,6 @@
 import React from 'react'
 import { Star, Plus } from 'lucide-react'
-import { Song } from '../mockData/mockSongs'
+import type { Song } from '../mockData/mockSongs'
 
 type SongCardProps = {
   song: Song

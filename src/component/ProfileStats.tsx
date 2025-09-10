@@ -1,5 +1,5 @@
 import React from 'react'
-import { Song } from '../mockData/mockSongs'
+import type { Song } from '../mockData/mockSongs'
 
 type ProfileStatsProps = {
   songs: Song[]
