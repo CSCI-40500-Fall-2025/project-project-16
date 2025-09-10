@@ -13,3 +13,12 @@ OUR PRODUCT allows you to view listening history, and write your personal review
 JukeBoxd by:
 
 Nakib Abedin, Tedd Lee, Muslim Hussaini, Ishmam Khan, Sudiptto Biswas
+
+
+# HOW TO INSTALL:
+
+- Clone the repository gh clone ...
+- Make sure you have npm install / node js
+- Run npm install i
+- To run application: npm run dev
+- Enjoy!
