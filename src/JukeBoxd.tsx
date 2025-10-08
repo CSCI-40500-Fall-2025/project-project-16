@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { Star, User } from 'lucide-react';
-import type {TabType } from './mockData/mockSongs'
-import { mockSongs } from './mockData/mockSongs'
-import Navbar from './component/Navbar'
-import NavButton from './component/NavButton'
-import ProfileStats from './component/ProfileStats'
-import SongCard from './component/SongCard'
- 
+import type { TabType } from './mockData/mockSongs';
+import { mockSongs } from './mockData/mockSongs';
+import Navbar from './component/Navbar';
+import NavButton from './component/NavButton';
+import ProfileStats from './component/ProfileStats';
+import SongCard from './component/SongCard';
+import SearchBar from './component/SearchBar';
+import { useSearchSongs } from './component/SearchSongs';
+
 /**
  * Main JukeBoxd App Component 
  */
 const JukeBoxd: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('rate-songs');
+  const { query, filteredSongs, handleSearch } = useSearchSongs();
 
   // Content renderer based on active tab
   const renderContent = () => {
@@ -27,24 +30,25 @@ const JukeBoxd: React.FC = () => {
               <h2 className="text-2xl font-bold text-white">Music Lover</h2>
               <p className="text-gray-400">Discovering and rating amazing music</p>
             </div>
-            
-            {/* Profile Stats */}
+
+            {/* Profile Header */}
             <ProfileStats songs={mockSongs} />
           </div>
         );
-        
+
       case 'rate-songs':
         return (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-white">Rate Songs</h2>
+            <SearchBar query={query} onSearch={handleSearch} />
             <div className="grid gap-4">
-              {mockSongs.map(song => (
+              {filteredSongs.map((song) => (
                 <SongCard key={song.id} song={song} />
               ))}
             </div>
           </div>
         );
-        
+
       case 'view-ratings':
         const ratedSongs = mockSongs.filter(song => song.rating);
         return (
@@ -64,7 +68,7 @@ const JukeBoxd: React.FC = () => {
             )}
           </div>
         );
-        
+
       default:
         return null;
     }
@@ -72,8 +76,8 @@ const JukeBoxd: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-    {/* Navigation Bar */}
-    <Navbar activeTab={activeTab} setActiveTab={setActiveTab} NavButton={NavButton} />
+      {/* Navigation Bar */}
+      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} NavButton={NavButton} />
 
       {/* Main Content Area */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
