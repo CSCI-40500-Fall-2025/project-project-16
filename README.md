@@ -22,3 +22,31 @@ Nakib Abedin, Tedd Lee, Muslim Hussaini, Ishmam Khan, Sudiptto Biswas
 - Run npm install i
 - To run application: npm run dev
 - Enjoy!
+
+# Software Architecture of Project
+
+## Initial Architectural Decisions
+
+## **Nonfunctional Product Characteristics**
+- **Scalability:** Supports multiple concurrent users submitting and viewing reviews without performance degradation.  
+- **Security:** Implements secure authentication and data protection, typically would use Spotify OAuth, but for this class, can build out Oauth using Flask Login & JWTs (JSON WEB TOKENS)
+- **Usability:** Clean, intuitive UI using **React + TypeScript** for accessibility and responsiveness.  
+- **Performance:** Fast page loads and efficient API communication for smooth interactions.  
+- **Maintainability:** Modular, layered architecture ensuring readability and easy updates.  
+
+## **Software Compatibility**
+- **Frontend:** Fully compatible with major browsers (Chrome, Firefox, Safari, Edge) and is responsive.
+- **Backend:** Lightweight **Node.js** or **Python** backend, utilizing microservices, most likely a standard Flask library
+- **API Integration:** Using **Spotify API**, however, can start with pre-loaded data or an open music data API
+
+## **Number of Users**
+- **Initial Scale:** Small, with scalability for a few hundred users.  
+
+## **Product Lifetime**
+- **Duration:** Should be standing, the general structure of this app is a CRUD app, and unless API's get affected should last without major bugs.  
+- **Future Expansion:** Easily adaptable to add playlists, recommendations, by getting more data.
+
+## **Software Reuse**
+- **UI Components:** Reusable **React** components (e.g., song cards, review forms, user profiles), can utilize React libraries such as FluentUI
+
+
