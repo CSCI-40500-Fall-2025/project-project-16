@@ -49,4 +49,39 @@ Nakib Abedin, Tedd Lee, Muslim Hussaini, Ishmam Khan, Sudiptto Biswas
 ## **Software Reuse**
 - **UI Components:** Reusable **React** components (e.g., song cards, review forms, user profiles), can utilize React libraries such as FluentUI
 
+---
+# **Layered Architectural Model**
+
+## **User Interface**
+- Web Browser  
+- Mobile Web View (Responsive React App)
+
+## **User Interaction Management**
+- User Authentication (Login / Signup / Logout)  
+- Profile Management  
+- Review Submission Forms  
+- Song Search and Selection Interface  
+- Rating and Comment System (Review System)
+
+## **Application Services**
+- Reviewing Protocol (Create, Read, Update, Delete)  
+- Song Metadata Access (via preloaded data (Ie, through CSV for MVP sake) or Spotify API or external music API)
+- Like / Favorite System  
+- Current Songs & Recent Reviews Feed  
+
+## **Integration Services**
+- Spotify API Integration (for track data, cover art, artist info)  
+- Cloud Storage for User Avatars and Review Media 
+- External Analytics, like usage tracking, etc, for telemetry
+
+## **Shared Infrastructure Services**
+- Authentication and Authorization Services  
+- Logging and Monitoring  
+- Application and Media Storage  
+- Database Management (User, Review, Song tables)  
+- API Routing and Load Balancing  
+
+---
+
+
 
