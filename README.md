@@ -43,6 +43,7 @@ Nakib Abedin, Tedd Lee, Muslim Hussaini, Ishmam Khan, Sudiptto Biswas
 - **Initial Scale:** Small, with scalability for a few hundred users.  
 
 ## **Product Lifetime**
+
 - **Duration:** Should be standing, the general structure of this app is a CRUD app, and unless API's get affected, it should last without major bugs.  
 - **Future Expansion:** Easily adaptable to add playlists, recommendations, by getting more data.
 
