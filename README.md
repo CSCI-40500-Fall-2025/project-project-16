@@ -13,7 +13,7 @@ OUR PRODUCT allows you to view listening history, and write your personal review
 
 JukeBoxd by:
 
-Nakib Abedin, Tedd Lee, Muslim Hussaini, Ishmam Khan, Sudiptto Biswas
+Muslim Hussaini, Ishmam Khan, Sudiptto Biswas
 
 
 # HOW TO INSTALL:
