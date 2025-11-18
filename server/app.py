@@ -5,6 +5,7 @@ from db import SessionLocal, engine
 from models import Base, Artist, Vote
 from deezer import get_random_artists
 from elo import update_elo
+from logger import logger
 
 Base.metadata.create_all(bind=engine)
 
@@ -13,14 +14,21 @@ CORS(app)
 
 # helper to ensures artist exists
 def get_or_create_artist(db, name, image_url):
+    logger.debug(f"Checking if artist '{name}' exists in DB")
     artist = db.query(Artist).filter(Artist.name == name).first()
+
     if artist:
+        logger.debug(f"Artist found in DB: {artist.id} - {artist.name}")
         return artist
+
+    logger.info(f"Artist '{name}' not found. Creating new record.")
 
     new_artist = Artist(name=name, image_url=image_url)
     db.add(new_artist)
     db.commit()
     db.refresh(new_artist)
+
+    logger.debug(f"Created new artist ID={new_artist.id}")
     return new_artist
 
 
@@ -28,22 +36,32 @@ def get_or_create_artist(db, name, image_url):
 @app.route("/artists/random", methods=["GET"])
 def get_random():
     count = int(request.args.get("count", 20))
+    logger.info(f"Request received: GET /artists/random (count={count})")
     db = SessionLocal()
 
-    fetched = get_random_artists(count)
+    try: 
+        fetched = get_random_artists(count)
+        logger.debug(f"Fetched {len(fetched)} artists from Deezer API")
 
-    result = []
-    for item in fetched:
-        artist = get_or_create_artist(db, item["name"], item["image_url"])
-        result.append({
-            "id": artist.id,
-            "name": artist.name,
-            "image_url": artist.image_url,
-            "elo": artist.elo
-        })
+        result = []
+        for item in fetched:
+            artist = get_or_create_artist(db, item["name"], item["image_url"])
+            result.append({
+                "id": artist.id,
+                "name": artist.name,
+                "image_url": artist.image_url,
+                "elo": artist.elo
+            })
 
-    db.close()
-    return jsonify(result)
+        logger.info(f"Returning {len(result)} artists to client")
+        return jsonify(result)
+    
+    except Exception as e:
+        logger.error(f"Error in /artists/random: {e}", exc_info=True)
+        return jsonify({"error": "Server error"}), 500
+
+    finally:
+        db.close()
 
 
 # ROUTE 2: send a vote, the client sends two data, a winner and loser id and than elo is calculated 
