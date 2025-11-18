@@ -11,7 +11,7 @@ Base.metadata.create_all(bind=engine)
 app = Flask(__name__)
 CORS(app)
 
-# Utility: ensures artist exists
+# helper to ensures artist exists
 def get_or_create_artist(db, name, image_url):
     artist = db.query(Artist).filter(Artist.name == name).first()
     if artist:

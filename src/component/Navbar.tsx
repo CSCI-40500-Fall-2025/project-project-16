@@ -1,6 +1,7 @@
 import React from 'react'
-import { Music, Star, User, Eye } from 'lucide-react'
-import type { TabType } from '../mockData/mockSongs'
+import { Music, Star, User, Eye, BarChart } from 'lucide-react'
+import type { TabType } from '../types'
+
 
 type NavbarProps = {
   activeTab: TabType
@@ -51,6 +52,14 @@ const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, NavButton }) =
             icon={<Eye className="w-4 h-4" />}
             label="View Ratings"
           />
+          <NavButton 
+            tab="ranks" 
+            activeTab={activeTab} 
+            onClick={setActiveTab} 
+            icon={<BarChart className="w-4 h-4" />} 
+            label="Ranks!" 
+          />
+          
         </div>
       </div>
     </div>

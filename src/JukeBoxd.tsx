@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Star, User } from 'lucide-react';
-import type { TabType } from './mockData/mockSongs';
+import type { TabType } from '../types';
 import { mockSongs } from './mockData/mockSongs';
 import Navbar from './component/Navbar';
 import NavButton from './component/NavButton';
@@ -8,6 +8,7 @@ import ProfileStats from './component/ProfileStats';
 import SongCard from './component/SongCard';
 import SearchBar from './component/SearchBar';
 import { useSearchSongs } from './component/SearchSongs';
+import Ranks from './pages/ranks';
 
 /**
  * Main JukeBoxd App Component 
@@ -68,6 +69,13 @@ const JukeBoxd: React.FC = () => {
             )}
           </div>
         );
+
+        case 'ranks':
+        return (
+          <div className="space-y-6">
+            <Ranks />
+          </div>
+        )
 
       default:
         return null;

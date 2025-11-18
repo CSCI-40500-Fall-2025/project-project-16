@@ -1,5 +1,5 @@
 import React from 'react'
-import type { TabType } from '../mockData/mockSongs'
+import type { TabType } from '../types'
 
 type NavButtonProps = {
   tab: TabType
