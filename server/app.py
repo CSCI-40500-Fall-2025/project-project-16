@@ -68,31 +68,61 @@ def get_random():
 
 @app.route("/vote", methods=["POST"])
 def vote():
+    logger.info("Request received: POST /vote")
     data = request.get_json()
+
+    if "winner_id" not in data or "loser_id" not in data:
+        logger.warning("Invalid vote payload received")
+        return jsonify({"error": "Missing winner_id or loser_id"}), 400
 
     winner_id = data["winner_id"]
     loser_id = data["loser_id"]
 
+    logger.debug(f"Vote received → winner={winner_id}, loser={loser_id}")
+
     db = SessionLocal()
 
-    winner = db.query(Artist).filter(Artist.id == winner_id).first()
-    loser = db.query(Artist).filter(Artist.id == loser_id).first()
 
-    new_winner_elo, new_loser_elo = update_elo(winner.elo, loser.elo)
+    try:
+        winner = db.query(Artist).filter(Artist.id == winner_id).first()
+        loser = db.query(Artist).filter(Artist.id == loser_id).first()
 
-    winner.elo = new_winner_elo
-    loser.elo = new_loser_elo
+        if not winner or not loser:
+            logger.warning("Vote contains invalid artist IDs")
+            return jsonify({"error": "Invalid artist ID"}), 400
 
-    vote = Vote(winner_id=winner_id, loser_id=loser_id)
-    db.add(vote)
+        logger.debug(
+            f"Before ELO → winner({winner_id})={winner.elo}, "
+            f"loser({loser_id})={loser.elo}"
+        )
 
-    db.commit()
-    db.close()
+        new_winner_elo, new_loser_elo = update_elo(winner.elo, loser.elo)
 
-    return jsonify({
-        "winner_new_elo": new_winner_elo,
-        "loser_new_elo": new_loser_elo
-    })
+        winner.elo = new_winner_elo
+        loser.elo = new_loser_elo
+
+        logger.info(
+            f"Updated ELO: winner={winner_id}→{new_winner_elo}, "
+            f"loser={loser_id}→{new_loser_elo}"
+        )
+
+        vote = Vote(winner_id=winner_id, loser_id=loser_id)
+        db.add(vote)
+        db.commit()
+
+        logger.debug("Vote successfully saved to database")
+
+        return jsonify({
+            "winner_new_elo": new_winner_elo,
+            "loser_new_elo": new_loser_elo
+        })
+
+    except Exception as e:
+        logger.error(f"Error in /vote: {e}", exc_info=True)
+        return jsonify({"error": "Server error"}), 500
+
+    finally:
+        db.close()
 
 
 
@@ -100,24 +130,36 @@ def vote():
 @app.route("/artists/top", methods=["GET"])
 def top_artists():
     limit = int(request.args.get("limit", 25))
+    logger.info(f"Request received: GET /artists/top (limit={limit})")
+
     db = SessionLocal()
 
-    artists = (
-        db.query(Artist)
-          .order_by(Artist.elo.desc())
-          .limit(limit)
-          .all()
-    )
+    try:
+        artists = (
+            db.query(Artist)
+            .order_by(Artist.elo.desc())
+            .limit(limit)
+            .all()
+        )
 
-    result = [{
-        "id": a.id,
-        "name": a.name,
-        "image_url": a.image_url,
-        "elo": a.elo
-    } for a in artists]
+        logger.debug(f"Fetched {len(artists)} top artists sorted by ELO")
 
-    db.close()
-    return jsonify(result)
+        result = [{
+            "id": a.id,
+            "name": a.name,
+            "image_url": a.image_url,
+            "elo": a.elo
+        } for a in artists]
+
+        logger.info("Returning top artists list to client")
+        return jsonify(result)
+
+    except Exception as e:
+        logger.error(f"Error in /artists/top: {e}", exc_info=True)
+        return jsonify({"error": "Server error"}), 500
+
+    finally:
+        db.close()
 
 
 if __name__ == "__main__":
