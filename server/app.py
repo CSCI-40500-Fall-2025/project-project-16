@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-
+import time
 from db import SessionLocal, engine
 from models import Base, Artist, Vote
 from deezer import get_random_artists
@@ -40,8 +40,10 @@ def get_random():
     db = SessionLocal()
 
     try: 
+        start = time.time()
         fetched = get_random_artists(count)
-        logger.debug(f"Fetched {len(fetched)} artists from Deezer API")
+        elapsed = (time.time() - start) * 1000  # ms
+        logger.debug(f"Fetched {len(fetched)} artists from Deezer API in {elapsed:.2f} ms")
 
         result = []
         for item in fetched:
