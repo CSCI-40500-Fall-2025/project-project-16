@@ -1,4 +1,4 @@
-from server.deezer import get_random_artists
+from deezer import get_random_artists
 import logging
 
 def test_logging():
