@@ -1,23 +1,32 @@
 import logging
-from logging.handlers import RotatingFileHandler
 import os
+from logtail import LogtailHandler
+from dotenv import load_dotenv
 
-# DEBUG for CI environment 
-LOG_LEVEL = os.getenv("LOG_LEVEL", "DEBUG")  
+load_dotenv()
 
-def setup_logger():
-    logger = logging.getLogger("artist_app")
-    logger.setLevel(LOG_LEVEL)
+SOURCE_TOKEN = os.getenv("BETTERSTACK_SOURCE_TOKEN")
+INGEST_HOST = os.getenv("BETTERSTACK_INGEST_HOST", "in.logs.betterstack.com")
 
-    # log file, that's currently rotated , keep now and than later upload to the cloud 
-    handler = RotatingFileHandler("app.log", maxBytes=1_000_000, backupCount=3)
-    
-    formatter = logging.Formatter(
-        "%(asctime)s | %(levelname)s | %(message)s"
-    )
+# Better Stack / Logtail handler
+logtail_handler = LogtailHandler(
+    source_token=SOURCE_TOKEN,
+    host=f"https://{INGEST_HOST}"
+)
 
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    return logger
+# Create logger
+logger = logging.getLogger("artist-api")
+logger.setLevel(logging.DEBUG)  
 
-logger = setup_logger()
+# Clear default handlers
+logger.handlers = []
+
+# Add console handler
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+console_formatter = logging.Formatter("[%(asctime)s] %(levelname)s - %(message)s")
+console_handler.setFormatter(console_formatter)
+
+# Add Logtail handler
+logger.addHandler(console_handler)
+logger.addHandler(logtail_handler)
