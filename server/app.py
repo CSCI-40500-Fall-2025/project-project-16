@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import numpy as np
+from kmeans import kmeans
 import time
 from db import SessionLocal, engine
 from models import Base, Artist, Vote
@@ -163,6 +165,48 @@ def top_artists():
     finally:
         db.close()
 
+
+@app.route("/cluster/from_votes", methods=["POST"])
+def cluster_from_votes():
+    data = request.get_json()
+
+    if "votes" not in data:
+        return jsonify({"error": "missing votes"}), 400
+
+    votes = data["votes"]
+
+    # extract unique artists
+    artists = set()
+    for v in votes:
+        artists.add(v["artist_a"])
+        artists.add(v["artist_b"])
+
+    artists = list(artists)
+    index = {}
+    for i in range(len(artists)):
+        index[artists[i]] = i
+
+    # build simple frequency vectors for each artist
+    X = np.zeros((len(artists), 1))
+
+    for v in votes:
+        winner = v["winner"]
+        artist_index = index[winner]
+        X[artist_index, 0] = X[artist_index, 0] + 1
+
+    # run k-means on these artists
+    labels, _ = kmeans(X, k=3)
+
+    # prepare grouped output
+    clusters = {}
+    for i in range(len(artists)):
+        cid = int(labels[i])
+        artist = artists[i]
+        if cid not in clusters:
+            clusters[cid] = []
+        clusters[cid].append(artist)
+
+    return jsonify({"clusters": clusters})
 
 if __name__ == "__main__":
     app.run(debug=True)
