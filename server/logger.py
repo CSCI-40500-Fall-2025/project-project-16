@@ -20,7 +20,6 @@ logger = logging.getLogger("artist-api")
 
 logger.setLevel(getattr(logging, LOG_LEVEL))  
 
-# Clear default handlers
 logger.handlers = []
 
 # Add console handler
@@ -38,4 +37,5 @@ logtail_handler = LogtailHandler(
 
 # Add Logtail handler
 logger.addHandler(console_handler)
+# experiment here 
 logger.addHandler(logtail_handler)
